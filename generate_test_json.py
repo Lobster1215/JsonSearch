@@ -11,7 +11,7 @@ import os
 
 # ============ 配置 ============
 TARGET_SIZE_MB = 1024  # 目标文件大小 (MB)，可在 800~2048 之间调整
-OUTPUT_FILE = "test_large.json"
+OUTPUT_FILE = ".\\json\\test_large.json"
 SEPARATOR = ",\n"  # JSON 元素之间的分隔符
 
 # ============ 数据池 ============

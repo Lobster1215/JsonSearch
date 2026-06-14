@@ -1,3 +1,7 @@
 .venv/
 问题.md
 task_list.md
+__pycache__/
+.vscode/
+json/
+logs/
