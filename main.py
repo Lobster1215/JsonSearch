@@ -94,6 +94,7 @@ def main():
                     elapsed, count = search.search_funzzy_key(f, args.key, log_path)
                 else:
                     elapsed, count = search.search_by_key(f, args.key, log_path)
+                    # elapsed, count = search.search_test(f, args.key, log_path)
                 total_elapsed += elapsed
                 total_matches += count
                 if count > 0:

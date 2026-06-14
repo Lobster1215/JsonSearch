@@ -1,5 +1,25 @@
 import mmap
 
+DIGITS = set(b'0123456789.eE+-')
+MARK = (32, 9, 10, 13)   # 空格 \t \n \r
+COLON = 58               # :
+
+# 校验匹配位置是否为 JSON Key（后面是否跟随 :）
+# 返回 (是否为Key, 冒号后第一个非空白字符的位置)
+def is_json_key(mm: mmap, key_end: int, mm_len: int):
+    pos = key_end + 1
+    if pos < mm_len and mm[pos] == COLON:
+        return True, pos + 1
+
+    while pos < mm_len:
+        c = mm[pos]
+        if c in MARK:
+            pos += 1
+            continue
+        return c == COLON, pos + 1
+
+    return False, pos
+
 # 查找括号结尾
 def find_bracket_end(mm: mmap, start: int, left_bracket: str, right_bracket: str):
     depth = 1
@@ -41,6 +61,8 @@ def parse_value(mm: mmap, value_start: int):
 
     value_end = -1
 
+    mm_len = len(mm)
+
     if mm[i:i+4] == b"true": # 布尔值处理
         value_end = i + 4
     elif mm[i:i+5] == b"false":
@@ -55,7 +77,9 @@ def parse_value(mm: mmap, value_start: int):
         value_end = find_bracket_end(mm, i + 1, '{', '}')
     else:
         # 数字情况处理（支持负数、小数、科学计数法）
-        while mm[i:i+1] in b'0123456789.eE+-':
+        while i < mm_len:
+            if mm[i:i+1] not in DIGITS:
+                break
             i += 1
         value_end = i
     if value_end < 0:
